@@ -5,7 +5,7 @@ require 'compass/commands/extensions/base'
 
 module Compass
   module Commands
-    module ExtensionProjectOptionsParser
+    module ExtensionManagerOptionsParser
       def set_options(opts)
         opts.banner = %Q{
           Usage: compass extension (install, remove, list, info)
@@ -19,7 +19,7 @@ module Compass
       end
     end
 
-    class ExtensionProject < UpdateProject
+    class ExtensionManager < UpdateProject
 
       register :extension
       register :e
@@ -45,7 +45,7 @@ module Compass
           parser = Compass::Exec::CommandOptionParser.new(arguments)
           parser.extend(Compass::Exec::GlobalOptionsParser)
           parser.extend(Compass::Exec::ProjectOptionsParser)
-          parser.extend(ExtensionProjectOptionsParser)
+          parser.extend(ExtensionManagerOptionsParser)
         end
 
         def usage
