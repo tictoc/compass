@@ -37,7 +37,7 @@ module Compass
 
       def perform
         arguments = options[:arguments]
-        case arguments.shift 
+        case options[:sub_command] 
           when *SEARCH
             Extensions::Base.search(arguments.shift)
           when *INSTALL
@@ -82,6 +82,7 @@ module Compass
         end
 
         def parse_arguments!(parser, arguments)
+          parser.options[:sub_command] = arguments.shift
           parser.options[:arguments] = arguments
         end
       end
