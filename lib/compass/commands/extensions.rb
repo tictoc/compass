@@ -8,10 +8,9 @@ module Compass
     module ExtensionProjectOptionsParser
       def set_options(opts)
         opts.banner = %Q{
-          Usage: compass clean [path/to/project] [options]
+          Usage: compass extension (install, remove, list, info)
 
-          Description:
-          Remove generated files and the sass cache.
+          Description: it does shit with an extension
 
           Options:
         }.split("\n").map{|l| l.gsub(/^ */,'')}.join("\n")
