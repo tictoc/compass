@@ -36,7 +36,23 @@ module Compass
       end
 
       def perform
-        
+        arguments = options[:arguments]
+        case arguments.shift 
+          when *SEARCH
+            Extensions::Base.search(arguments.shift)
+          when *INSTALL
+            Extensions::Base.install(arguments.shift)
+          when *REMOVE
+            puts 'remove'
+            puts arguments.shift
+          when *LIST
+            Extensions::Base.list
+          when *INFO
+            puts 'info'
+            puts arguments.shift
+          else
+            raise 'go away'
+        end
       end
 
 
@@ -66,23 +82,7 @@ module Compass
         end
 
         def parse_arguments!(parser, arguments)
-          case arguments.shift 
-            when *SEARCH
-              Extensions::Base.search(arguments.shift)
-            when *INSTALL
-              Extensions::Base.install(arguments.shift)
-            when *REMOVE
-              puts 'remove'
-              puts arguments.shift
-            when *LIST
-              Extensions::Base.list
-            when *INFO
-              puts 'info'
-              puts arguments.shift
-            else
-              raise 'go away'
-          end
-  
+          parser.options[:arguments] = arguments
         end
       end
     end
