@@ -22,7 +22,6 @@ module Compass
     class ExtensionManager < UpdateProject
 
       register :extension
-      register :e
       
       SEARCH = ['search', 's']
       INSTALL = ['install', 'i']

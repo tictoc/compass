@@ -28,6 +28,31 @@ module Compass
         FileUtils.mkdir_p(dir) unless options[:dry_run]
       end
     end
+    
+    def inject_at_bottom(file_name, string)
+      content = File.read(file_name)
+      content = "#{content}#{string}"
+      File.open(file_name, 'w') { |file| file << content }
+      log_action :inject, basename(file_name), options
+    end
+    
+    def inject_into_file(file_name, replacment, position, anchor)
+      if position == :after
+        replace(file_name, Regexp.escape(anchor), "#{anchor}#{replacment}")
+        log_action :inject, basename(file_name), options
+      elsif position == :before
+        replace(file_name, Regexp.escape(anchor), "#{replacment}#{anchor}")
+        log_action :inject, basename(file_name), options
+      else
+        raise Compass::FilesystemConflict.new("You need to specify :before or :after")
+      end
+    end
+    
+    def replace(destination, regexp, string)
+      content = File.binread(destination)
+      content.gsub!(Regexp.new(regexp), string)
+      File.open(destination, 'wb') { |file| file.write(content) }
+    end
 
     # Write a file given the file contents as a string
     def write_file(file_name, contents, options = nil, binary = false)

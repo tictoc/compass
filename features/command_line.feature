@@ -154,11 +154,12 @@ Feature: Command Line
   Scenario: Basic help
     When I run: compass help
     Then I should see the following "primary" commands:
-      | clean   |
-      | compile |
-      | create  |
-      | init    |
-      | watch   |
+      | clean     |
+      | compile   |
+      | create    |
+      | extension |
+      | init      |
+      | watch     |
     And I should see the following "other" commands:
       | config      |
       | frameworks  |

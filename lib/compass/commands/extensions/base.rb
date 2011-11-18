@@ -12,6 +12,21 @@ module Compass
       class Base
         HOST = "http://localhost:3000"
         class << self
+          include Compass::Actions
+          
+          def actions
+            a = Object.dup
+            a.send(:include, Compass::Actions)
+            a.class_eval do
+              def working_path
+                ''
+              end
+              def options
+                {}
+              end
+            end
+            a.new
+          end
           
           def load_json_from_repo
             uri = URI.parse "#{HOST}/extensions.json"
@@ -69,7 +84,27 @@ module Compass
             #do what it says damnit
           end
           
+          def install_to_gemfile(extension)
+            ext = find_extension(extension)
+            gem_string = "  gem '#{ext['ruby_gem_cache']['name']}', '#{version(ext)}'\n"
+            gemfile = File.join(Compass.configuration.project_path, 'Gemfile')
+            if File.read(gemfile).include?("group :assets do")
+              actions.inject_into_file(gemfile, gem_string, :after, "group :assets do\n")
+            else
+              actions.inject_at_bottom(gemfile, "\ngroup :assets do\n#{gem_string}end\n")
+            end
+          end
+          
           def install(extension)
+            if File.exists?(File.join(Compass.configuration.project_path, 'Gemfile'))
+              print "Installing gem to your Gemfile make sure to run bundle install"
+              install_to_gemfile(extension)
+            else
+              install_from_gem(extension)
+            end
+          end
+          
+          def install_from_gem(extension)
             ext = find_extension(extension)
             not_an_extension(extension) unless ext
             deps = get_deps(ext)

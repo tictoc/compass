@@ -17,7 +17,8 @@ module Compass
       :directory => :green,
       :identical => :green,
       :convert   => :green,
-      :unchanged => :yellow
+      :unchanged => :yellow,
+      :inject => :green
     }
 
 
