@@ -18,6 +18,7 @@ Gem::Specification.new do |gemspec|
   gemspec.add_dependency 'sass', '~> 3.1'
   gemspec.add_dependency 'chunky_png', '~> 1.2'
   gemspec.add_dependency 'fssm', '>= 0.2.7'
+  gemspec.add_dependency 'json_pure', "~> 1.6.1"
 
   gemspec.files = %w(README.markdown LICENSE.markdown VERSION.yml Rakefile)
   gemspec.files += Dir.glob("bin/*")

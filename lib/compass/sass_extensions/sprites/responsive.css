@@ -1,0 +1,47 @@
+/* iPad General */
+@media only screen and (device-width: 768px) {
+    
+}
+
+/* iPad PORTRAIT */
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
+
+}
+
+/* iPad LANDSCAPE */
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
+
+}
+
+/* iPhone 3gs */
+@media only screen and (max-device-width: 480px) {
+
+}
+
+/* iPhone 4 */ 
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+
+}
+
+/* Crapy Andriod phones */
+@media screen and (-webkit-device-pixel-ratio:0.75) {
+  
+}
+
+/* Medium density Andriod Phones */
+@media only screen and (-webkit-device-pixel-ratio:1){
+    /* Put CSS for medium density (mdpi) Android layouts in here */
+}
+
+
+/* Newer Andriod phones */
+@media screen and (-webkit-device-pixel-ratio: 1.5) {
+
+}
+
+/* Windows 7 phones */
+@media only screen and (device-width: 320px) {
+    
+}
+
+/* etc */
