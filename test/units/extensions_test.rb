@@ -74,7 +74,7 @@ class ExtensionsTest < Test::Unit::TestCase
     within_sandbox do
       FileUtils.touch('Gemfile')
       compass 'extension', 'install', 'compass 1'
-      File.read('Gemfile').include? "gem 'compass'"
+      assert File.read('Gemfile').include? "gem 'compass'"
     end
   end
 
