@@ -84,18 +84,31 @@ module Compass
         $stdout.flush
 
         begin
-        FSSM.monitor do |monitor|
-          Compass.configuration.sass_load_paths.each do |load_path|
-            load_path = load_path.root if load_path.respond_to?(:root)
+          load_paths = Compass.configuration.sass_load_paths.map do |path|
             next unless load_path.is_a? String
-            monitor.path load_path do |path|
-              path.glob '**/*.s[ac]ss'
+            next load_path.root if load_path.respond_to?(:root)
+          end.compact
 
-              path.update &method(:recompile)
-              path.delete {|base, relative| remove_obsolete_css(base,relative); recompile(base, relative)}
-              path.create &method(:recompile)
+          listener = Listen::MultiListener.new(*load_paths)
+
+          listener.filter('**/*.s[ac]ss')
+
+          listener.change do |modified, added, removed|
+            if modified
+              modified.each { |file| recompile(file) }
+            end
+            if added
+              added.each { |file| recompile(file) }
+            end
+            if removed
+              removed.each do |file|
+                remove_obsolete_css
+                recompile
+              end
             end
           end
+
+
           Compass.configuration.watches.each do |glob, callback|
             monitor.path Compass.configuration.project_path do |path|
               path.glob glob
@@ -126,7 +139,7 @@ module Compass
       end
       end
 
-      def remove_obsolete_css(base = nil, relative = nil)
+      def remove_obsolete_css
         compiler = new_compiler_instance(:quiet => true)
         sass_files = compiler.sass_files
         deleted_sass_files = (last_sass_files || []) - sass_files
@@ -137,12 +150,12 @@ module Compass
         self.last_sass_files = sass_files
       end
 
-      def recompile(base = nil, relative = nil)
+      def recompile(changed_file)
         @memory_cache.reset! if @memory_cache
         compiler = new_compiler_instance(:quiet => true, :loud => [:identical, :overwrite, :create])
         if file = compiler.out_of_date?
           begin
-            puts ">>> Change detected at "+Time.now.strftime("%T")+" to: #{relative || compiler.relative_stylesheet_name(file)}"
+            puts ">>> Change detected at "+Time.now.strftime("%T")+" to: #{changed_file || compiler.relative_stylesheet_name(file)}"
             $stdout.flush
             compiler.run
             GC.start
